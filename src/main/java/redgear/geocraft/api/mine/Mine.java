@@ -22,7 +22,9 @@ public abstract class Mine {
 	public abstract void init();
 	
 	public abstract void preSave();
-
+	
+	public abstract void generateMine(World world, Random rand, int chunkX, int chunkZ, Boolean debug, int commandY);
+	
 	public abstract void generate(World world, Random rand, int chunkX, int chunkZ);
 
 	/**

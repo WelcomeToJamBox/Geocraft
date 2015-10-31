@@ -3,6 +3,7 @@ package redgear.geocraft.core;
 import net.minecraft.init.Blocks;
 import redgear.core.mod.ModUtils;
 import redgear.core.util.SimpleItem;
+import redgear.geocraft.generation.DebugMineGenCommand;
 import redgear.geocraft.generation.MineGenerator;
 import redgear.geocraft.generation.MineRegistry;
 import redgear.geocraft.mines.MineVanilla;
@@ -13,6 +14,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = "redgear_geocraft", name = "Geocraft", version = "@ModVersion@", dependencies = "required-after:redgear_core;after:ThermalExpansion;after:NetherOres;before:UndergroundBiomes")
 public class Geocraft extends ModUtils {
@@ -45,7 +47,13 @@ public class Geocraft extends ModUtils {
 		addPlugin(undergroundBiomesPlugin);
 		
 	}
-
+// added event handler
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent event) {
+		event.registerServerCommand(new DebugMineGenCommand());
+	}
+	
+	
 	@Override
 	public void PreInit(FMLPreInitializationEvent event) {
 		new MineGenerator(this);

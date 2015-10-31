@@ -31,17 +31,23 @@ import redgear.geocraft.mines.MineCoal;
 import redgear.geocraft.mines.MineCylinderComplex;
 import redgear.geocraft.mines.MineDiamond;
 import redgear.geocraft.mines.MineGold;
+import redgear.geocraft.mines.MineLaccolith;
+import redgear.geocraft.mines.MineMetioricDeposit;
 import redgear.geocraft.mines.MineTrace;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ComplexOresPlugin implements IPlugin {
-
+//Notes maybe add metioric iron as an item too
+	//if thermal is installed smelts to invar else iron
+	//for time being iron lump and nickel are used
 	SubBlockGeoOre ironOreBlock;
 
 	SubBlockGeoOre copperOreBlock;
 	SubBlockGeoOre tinOreBlock;
-
+    //new
+	SubBlockGeoOre taeniteOreBlock;
+	
 	@Override
 	public String getName() {
 		return "Complex Ores";
@@ -112,6 +118,12 @@ public class ComplexOresPlugin implements IPlugin {
 		GeocraftConfig.emeraldNugget = drops.addMetaItem(new SubItem("nuggetEmerald"));
 		mod.registerOre("nuggetEmerald", GeocraftConfig.emeraldNugget);
 		
+		//new items
+		GeocraftConfig.nickelLump = drops.addMetaItem(new SubItem("nickelLump"));
+		mod.registerOre("oreNickel", GeocraftConfig.nickelLump);
+		
+		GeocraftConfig.platinumLump = drops.addMetaItem(new SubItem("platinumLump"));
+		mod.registerOre("orePlatinum", GeocraftConfig.platinumLump);
 
 		MetaBlock<SubBlock> oreBlock = new MetaBlock<SubBlock>(Material.rock, "Ore");
 		oreBlock.setCreativeTab(GeocraftConfig.geoTab);
@@ -124,7 +136,7 @@ public class ComplexOresPlugin implements IPlugin {
 		GeocraftConfig.coalOre = oreBlock.addMetaBlock(new SubBlockGeoOre("coalMid", new WeightedItem(coal, 1, 2, 1),
 				new RareDrop(coalNugget, 4, 3)));
 		mod.registerOre("denseoreCoal", GeocraftConfig.coalOre);
-
+//this may be an issue with duping if an ore dict mod is installed
 		GeocraftConfig.coalDenseOre = oreBlock.addMetaBlock(new SubBlockGeoOre("coalRich", new WeightedItem(coal, 2, 6,
 				2), new RareDrop(coalNugget, 6, 4)));
 		mod.registerOre("denseoreCoal", GeocraftConfig.coalDenseOre);
@@ -166,6 +178,10 @@ public class ComplexOresPlugin implements IPlugin {
 		GeocraftConfig.emeraldOre = oreBlock.addMetaBlock(emeraldOreBlock);
 		mod.registerOre("denseoreEmerald", GeocraftConfig.emeraldOre);
 		
+		//new
+		taeniteOreBlock = new SubBlockGeoOre("taeniteOreBlock", new WeightedItem(ironLump, 1 ,2 ,2), new WeightedItem(GeocraftConfig.nickelLump, 1,1,1), new RareDrop(GeocraftConfig.platinumLump, 2, 20));
+		GeocraftConfig.taeniteOre = oreBlock.addMetaBlock(taeniteOreBlock);
+		mod.registerOre("oreTaenite", GeocraftConfig.taeniteOre);
 		
 		final String pick = "pickaxe";
 		final String cat = "HarvestLevel";
@@ -188,6 +204,9 @@ public class ComplexOresPlugin implements IPlugin {
 		oreBlock.setHarvestLevel(pick, mod.getInt(cat, "CopperOre", 1), GeocraftConfig.copperOre.meta);
 		oreBlock.setHarvestLevel(pick, mod.getInt(cat, "TinOre", 1), GeocraftConfig.tinOre.meta);
 		oreBlock.setHarvestLevel(pick, mod.getInt(cat, "GalenaOre", 2), GeocraftConfig.galenaOre.meta);
+		
+		//new
+		oreBlock.setHarvestLevel(pick, mod.getInt(cat, "TaeniteOre", 2), GeocraftConfig.taeniteOre.meta);
 
 		LeveledRecipe nugs = new LeveledRecipe("XXX", "XXX", "XXX");
 
@@ -223,6 +242,9 @@ public class ComplexOresPlugin implements IPlugin {
 		undergroundBiomesPlugin.setup(oreBlock, GeocraftConfig.tinOre.getMeta(), "redgear_geocraft:tinOreOverlay", "tile.Ore.tinOre");
 
 		undergroundBiomesPlugin.setup(oreBlock, GeocraftConfig.galenaOre.getMeta(), "redgear_geocraft:galenaOreOverlay", "tile.Ore.galenaOre");
+		//new
+		undergroundBiomesPlugin.setup(oreBlock, GeocraftConfig.taeniteOre.getMeta(), "redgear_geocraft:taeniteOreOverlay", "tile.Ore.taeniteOre");
+		
 	}
 
 	@Override
@@ -240,8 +262,11 @@ public class ComplexOresPlugin implements IPlugin {
 		final ISimpleItem copperOre = new SimpleOre("oreCopper");
 		final ISimpleItem tinOre = new SimpleOre("oreTin");
 		final ISimpleItem silverOre = new SimpleOre("oreSilver");
-		final ISimpleItem leadOre = new SimpleOre("oreLead");
-
+		final ISimpleItem leadOre = new SimpleOre("oreLead"); //????, ah for register ignore
+		//new
+		final ISimpleItem nickelOre = new SimpleOre("oreNickel");
+		final ISimpleItem platinumOre = new SimpleOre("orePlatinum");//need to check ore dict names
+		
 		reg.registerMine(new MineCoal());//Coal
 		reg.registerMine(new MineCylinderComplex("CoalCylinder", vanillaCoal, stone, 2, 20, 16, false).setActive(!GeocraftConfig.complexMines));
 		reg.registerTrace("CoalTrace", GeocraftConfig.complexOres ? GeocraftConfig.coalOre : vanillaCoal, stone, 60);
@@ -274,7 +299,12 @@ public class ComplexOresPlugin implements IPlugin {
 		reg.registerMine(new MineCylinderComplex("EmeraldCylinder", vanillaEmerald, stone, 4, 3, 6, false).setActive(!GeocraftConfig.complexMines));
 		reg.registerMine(new MineTrace("EmeraldComplexTrace", GeocraftConfig.emeraldOre, stone, 1).setActive(GeocraftConfig.complexMines));
 		reg.registerMine(new MineTrace("EmeraldTrace", vanillaEmerald, stone, 2).setActive(!GeocraftConfig.complexMines));
-
+		//new
+		reg.registerMine(new MineMetioricDeposit("Taenite", GeocraftConfig.taeniteOre, stone, 1, 10, 5).setActive(GeocraftConfig.complexMines));
+		//using Taenite to test it.
+		reg.registerMine(new MineLaccolith("debugLaccolith", GeocraftConfig.taeniteOre, stone, 1, 10, 5).setActive(GeocraftConfig.complexMines));
+		
+		
 		if (GeocraftConfig.complexMines) {
 
 			if (ItemRegUtil.isInOreDict("ingotCopper")) {
@@ -290,6 +320,7 @@ public class ComplexOresPlugin implements IPlugin {
 			if (ItemRegUtil.isInOreDict("ingotLead") || ItemRegUtil.isInOreDict("ingotSilver")) {
 				reg.registerMine(new MineCylinderComplex("Galena", GeocraftConfig.galenaOre, GeocraftConfig.stone, 4, 4, 16, true).setActive(GeocraftConfig.complexMines));
 				reg.registerMine(new MineTrace("GalenaTrace", GeocraftConfig.galenaOre, GeocraftConfig.stone, 3) .setActive(GeocraftConfig.complexMines));
+				//add after testing
 			}
 		}
 
@@ -304,6 +335,7 @@ public class ComplexOresPlugin implements IPlugin {
 		reg.registerIgnore(tinOre);
 		reg.registerIgnore(silverOre);
 		reg.registerIgnore(leadOre);
+		//TODO
 	}
 
 	@Override
@@ -344,8 +376,10 @@ public class ComplexOresPlugin implements IPlugin {
 			mod.addSmelting(GeocraftConfig.leadLump.getStack(), ingotLead);
 		}
 		ItemStack nuggetLead = ItemStackUtil.getOreWithName("nuggetLead", 1);
-		if (nuggetLead != null)
+		if (nuggetLead != null) {
 			GeocraftConfig.galenaOreBlock.addItem(new RareDrop(new SimpleItem(nuggetLead), 1, 6));
+		}
+		
 	}
 
 }

@@ -5,6 +5,9 @@ build
 eclipse
 dep
 
+src\main\java\redgear\geocraft\api\mine\MineFaultLine2.java
+src\main\java\redgear\geocraft\api\mine\MineFaultLine.java
+
 #################
 ## Eclipse
 #################

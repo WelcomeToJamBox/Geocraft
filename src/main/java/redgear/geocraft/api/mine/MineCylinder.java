@@ -17,7 +17,7 @@ public abstract class MineCylinder extends MineSingleOre {
 
 	protected transient int intRarity;
 	protected transient int intMineSize;
-	protected transient int intVeinSize;
+	protected transient int intVeinSize; 
 
 	protected float mineSize;
 	protected float mineRarity;
@@ -66,6 +66,7 @@ public abstract class MineCylinder extends MineSingleOre {
 				for (int i = 0; i <= intMineSize; i++) {
 					y = 4 + rand.nextInt(top);
 					angle = rand.nextFloat() * (float) Math.PI;
+					
 					radius = rand.nextInt(maxRadius);
 
 					x = (int) (MathHelper.sin(angle) * radius);

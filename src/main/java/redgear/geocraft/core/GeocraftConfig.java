@@ -49,6 +49,12 @@ public class GeocraftConfig implements IPlugin{
 	public static SimpleItem tinOre;
 	public static SimpleItem galenaOre;
 	
+	//new ores
+	public static SimpleItem nickelLump;
+	public static SimpleItem platinumLump;
+	
+	public static SimpleItem taeniteOre;
+	
 	public static SubBlockGeoOre galenaOreBlock;
 	
 	public static ISimpleItem marble;

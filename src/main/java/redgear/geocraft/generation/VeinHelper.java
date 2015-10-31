@@ -22,8 +22,12 @@ public final class VeinHelper {
 		return isInAir(test.world, test);
 	}
 
+	//added debug gen
 	public static void generateSphere(WorldLocation start, ISimpleItem block, ISimpleItem target, Random rand, int size) {
-		if (isInAir(start))
+		generateSphere(start,block,target,rand,size, false);
+	}
+	public static void generateSphere(WorldLocation start, ISimpleItem block, ISimpleItem target, Random rand, int size, Boolean debug) {
+		if (isInAir(start) && !debug)
 			return;
 
 		float f = rand.nextFloat() * (float) Math.PI;
